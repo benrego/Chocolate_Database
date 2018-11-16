@@ -39,7 +39,7 @@ def init_db():
             'CompanyLocationId' INTEGER,
             'Rating' REAL,
             'BeanType' TEXT,
-            'BroadBeanOriginId' INTEGER
+            'BroadBeanOrigin' INTEGER
         );
     '''
     cur.execute(statement)
@@ -128,7 +128,7 @@ def update_bean_ids():
     for country in country_dict.keys():
         company_id = country_dict[country]
         cur.execute("UPDATE Bars SET CompanyLocationId = ? WHERE CompanyLocationId = ?", (company_id, country))
-        cur.execute("UPDATE Bars SET BroadBeanOriginId = ? WHERE BroadBeanOriginId = ?", (company_id, country))
+        cur.execute("UPDATE Bars SET BroadBeanOrigin = ? WHERE BroadBeanOrigin = ?", (company_id, country))
 
     ### UPDATE ID for COUNTRIES: UNKNOWN ###
 
@@ -219,9 +219,9 @@ def process_command(user_input):
         # if 'sellcountry' or 'sellregion' in param_diction.keys():
         #     join = "JOIN Countries ON Bars.CompanyLocationId = Countries.Id "
         # elif 'sourcecountry' or 'sourceregion' in param_diction.keys():
-        #     join = "JOIN Countries ON Bars.BroadBeanOriginId = Countries.Id"
+        #     join = "JOIN Countries ON Bars.BroadBeanOrigin = Countries.Id"
         join_sell = "JOIN Countries as sell ON Bars.CompanyLocationId = sell.Id "
-        join_source = "JOIN Countries as source ON Bars.BroadBeanOriginId = source.Id "
+        join_source = "JOIN Countries as source ON Bars.BroadBeanOrigin = source.Id "
         where_clause = ''
         addtl_where = ''
         sort = ''
@@ -287,7 +287,7 @@ def process_command(user_input):
         start = "SELECT Company, sell.EnglishName"
         from_clause = " FROM Bars "
         join_sell = "JOIN Countries as sell ON Bars.CompanyLocationId = sell.Id "
-        # join_source = "JOIN Countries as source ON Bars.BroadBeanOriginId = source.Id "
+        # join_source = "JOIN Countries as source ON Bars.BroadBeanOrigin = source.Id "
         where_clause = ''
         sort = ''
         t_b = ''
@@ -366,9 +366,10 @@ def process_command(user_input):
             grouping = 'GROUP BY CompanyLocationId '
 
         elif param_diction['join'] == 'sources':
-            join = "JOIN Countries ON Bars.BroadBeanOriginId = Countries.Id "
-            grouping = 'GROUP BY BroadBeanOriginId '
+            join = "JOIN Countries ON Bars.BroadBeanOrigin = Countries.Id "
+            grouping = 'GROUP BY BroadBeanOrigin '
         where_clause = ''
+        exclude = 'Countries.EnglishName != "Côte d\'Ivoire" '
         sort = ''
         t_b = ''
         agg = ''
@@ -393,9 +394,9 @@ def process_command(user_input):
             elif item[0] == 'join':
                 continue
             else:
-                where_clause = ' WHERE ' +input_sql_conversion[item[0]]+'=? '
+                where_clause = 'AND '+input_sql_conversion[item[0]]+'=? '
                 argument_list.append(item[1])
-        statement = start+agg+from_clause+join+where_clause+grouping+having_count+sort+t_b
+        statement = start+agg+from_clause+join+' WHERE '+exclude+where_clause+grouping+having_count+sort+t_b
         argument = tuple(argument_list)
         # print(statement)
         cur.execute(statement,argument)
@@ -448,10 +449,10 @@ def process_command(user_input):
             grouping = 'GROUP BY Region '
 
         elif param_diction['join'] == 'sources':
-            join = "JOIN Countries ON Bars.BroadBeanOriginId = Countries.Id "
+            join = "JOIN Countries ON Bars.BroadBeanOrigin = Countries.Id "
             start = "SELECT Region"
             grouping = 'GROUP BY Region '
-        where_clause = ''
+        where_clause = " WHERE Countries.Id != 251 "
         sort = ''
         t_b = ''
         agg = ''
@@ -479,6 +480,7 @@ def process_command(user_input):
                 where_clause = ' WHERE ' +input_sql_conversion[item[0]]+'=? '
                 argument_list.append(item[1])
         statement = start+agg+from_clause+join+where_clause+grouping+having_count+sort+t_b
+        # print(statement)
         argument = tuple(argument_list)
         cur.execute(statement,argument)
         tup_list = cur.fetchall()
@@ -523,12 +525,6 @@ def interactive_prompt():
             print('\n')
         except:
             print("Command not recognized: "+response+'\n')
-
-
-
-
-
-
 
         if response == 'help':
             print(help_text)
