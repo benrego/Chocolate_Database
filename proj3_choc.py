@@ -78,7 +78,7 @@ def insert_stuff_bars(name):
     cur = conn.cursor()
 
     for obs in list_of_lists[1:]:
-        insertion = (None,obs[0],obs[1],obs[2],obs[3],obs[4],obs[5],obs[6],obs[7],obs[8])
+        insertion = (None,obs[0],obs[1],obs[2],obs[3],float(obs[4].strip("%")),obs[5],obs[6],obs[7],obs[8])
         statement = 'INSERT INTO "Bars"'
         statement += 'VALUES (?,?,?,?,?,?,?,?,?,?)'
         cur.execute(statement,insertion)
@@ -532,4 +532,16 @@ def interactive_prompt():
 
 # Make sure nothing runs or prints out when this file is run as a module
 if __name__=="__main__":
+    init_db()
+    print('Deleting db and starting over from scratch.')
+
+    insert_stuff_bars(BARSCSV)
+    print('Adding bars to db.')
+
+    insert_stuff_countries(COUNTRIESJSON)
+    print('Adding countries to db.')
+
+    update_bean_ids()
+    print('Linking tables in db.')
+
     interactive_prompt()
