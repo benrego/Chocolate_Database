@@ -520,7 +520,10 @@ def interactive_prompt():
             for tup in tuple_response:
                 print_list = []
                 for i in range(0,len(tup)):
-                    print_list.append(param_strings[i].format(tup[i]))
+                    if type(tup[i]) == type(5.0) and tup[i] >5:
+                        print_list.append(param_strings[i].format(str(tup[i])+"%"))
+                    else:
+                        print_list.append(param_strings[i].format(tup[i]))
                 print(*print_list, sep=' ')
             print('\n')
         except:
