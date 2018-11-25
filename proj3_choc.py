@@ -9,13 +9,12 @@ import json
 # functions.
 
 # Part 1: Read data from CSV and JSON into a new database called choc.db
-DBNAME = 'choc.db.sqlite'
-db_name = DBNAME
+DBNAME = 'choc.db'
 BARSCSV = 'flavors_of_cacao_cleaned.csv'
 COUNTRIESJSON = 'countries.json'
 
 def init_db():
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DBNAME)
     cur = conn.cursor()
 
 
@@ -74,7 +73,7 @@ def open_csv(name):
 
 def insert_stuff_bars(name):
     list_of_lists = open_csv(name)
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DBNAME)
     cur = conn.cursor()
 
     for obs in list_of_lists[1:]:
@@ -96,7 +95,7 @@ def open_json(file_name):
 
 def insert_stuff_countries(name):
     json_dict_list = open_json(name)
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DBNAME)
     cur = conn.cursor()
 
     for obs in json_dict_list:
@@ -110,7 +109,7 @@ def insert_stuff_countries(name):
 
 
 def update_bean_ids():
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DBNAME)
     cur = conn.cursor()
 
     statement = "INSERT INTO Countries ('Alpha2','Alpha3','EnglishName','Region','Subregion','Population','Area') VALUES('Unknown','Unknown','Unknown','Unknown','Unknown','Unknown','Unknown')"
@@ -143,20 +142,20 @@ def update_bean_ids():
 ###############################################################################
 ###############################################################################
 
-if len(sys.argv) >1 and sys.argv[1] == '--init':
-    print('Deleting db and starting over from scratch.')
-    init_db()
-elif len(sys.argv) >1 and sys.argv[1] == 'bars' and sys.argv[2] == 'add':
-    print('Adding bars to db.')
-    insert_stuff_bars(BARSCSV)
-elif len(sys.argv) >1 and sys.argv[1] == 'countries' and sys.argv[2] == 'add':
-    print('Adding countries to db.')
-    insert_stuff_countries(COUNTRIESJSON)
-elif len(sys.argv) >1 and sys.argv[1] == 'update':
-    print('Updating db.')
-    update_bean_ids()
-else:
-    print('Leaving the DB alone.')
+# if len(sys.argv) >1 and sys.argv[1] == '--init':
+#     print('Deleting db and starting over from scratch.')
+#     init_db()
+# elif len(sys.argv) >1 and sys.argv[1] == 'bars' and sys.argv[2] == 'add':
+#     print('Adding bars to db.')
+#     insert_stuff_bars(BARSCSV)
+# elif len(sys.argv) >1 and sys.argv[1] == 'countries' and sys.argv[2] == 'add':
+#     print('Adding countries to db.')
+#     insert_stuff_countries(COUNTRIESJSON)
+# elif len(sys.argv) >1 and sys.argv[1] == 'update':
+#     print('Updating db.')
+#     update_bean_ids()
+# else:
+#     print('Leaving the DB alone.')
 
 
 # Part 2: Implement logic to process user commands
@@ -165,7 +164,7 @@ def process_command(user_input):
     ### 4 main commands:
     user_list = user_input.split(" ")
 
-    conn = sqlite3.connect(db_name)
+    conn = sqlite3.connect(DBNAME)
     cur = conn.cursor()
 
 ###############################################################################
