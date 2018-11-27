@@ -248,6 +248,7 @@ def process_command(user_input):
         # print(statement)
         cur.execute(statement,argument)
         tup_list = cur.fetchall()
+        # print(tup_list)
         return tup_list
 
 ###############################################################################
@@ -318,6 +319,7 @@ def process_command(user_input):
         # print(statement)
         cur.execute(statement,argument)
         tup_list = cur.fetchall()
+        # print(tup_list)
         return tup_list
 
 
@@ -368,12 +370,12 @@ def process_command(user_input):
             join = "JOIN Countries ON Bars.BroadBeanOrigin = Countries.Id "
             grouping = 'GROUP BY BroadBeanOrigin '
         where_clause = ''
-        exclude = 'Countries.EnglishName != "Côte d\'Ivoire" '
+        # exclude = 'Countries.EnglishName != "Côte d\'Ivoire" '
         sort = ''
         t_b = ''
         agg = ''
         #having_count = ''
-        having_count = 'HAVING COUNT(*) >=4 '
+        having_count = 'HAVING COUNT(*) >4 '
         argument_list = []
         for item in arguments:
             if item[0] == 'sort':
@@ -395,11 +397,13 @@ def process_command(user_input):
             else:
                 where_clause = 'AND '+input_sql_conversion[item[0]]+'=? '
                 argument_list.append(item[1])
-        statement = start+agg+from_clause+join+' WHERE '+exclude+where_clause+grouping+having_count+sort+t_b
+        # statement = start+agg+from_clause+join+' WHERE '+exclude+where_clause+grouping+having_count+sort+t_b
+        statement = start+agg+from_clause+join+where_clause+grouping+having_count+sort+t_b
         argument = tuple(argument_list)
         # print(statement)
         cur.execute(statement,argument)
         tup_list = cur.fetchall()
+        # print(tup_list)
         return tup_list
 
 ###############################################################################
@@ -483,6 +487,7 @@ def process_command(user_input):
         argument = tuple(argument_list)
         cur.execute(statement,argument)
         tup_list = cur.fetchall()
+        # print(tup_list)
         return tup_list
 
 
@@ -545,5 +550,5 @@ if __name__=="__main__":
 
     update_bean_ids()
     print('Linking tables in db.')
-
+    
     interactive_prompt()
