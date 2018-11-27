@@ -229,8 +229,8 @@ def process_command(user_input):
         for item in arguments:
             if item[0] == 'sort':
                 sort = 'ORDER BY ' + input_sql_conversion[item[1]]
-                if item[1] == 'cocoa':
-                    addtl_where = 'Bars.CocoaPercent <> "100%" '
+                # if item[1] == 'cocoa':
+                #     addtl_where = 'Bars.CocoaPercent <> "100%" '
             elif item[0] == 'top':
                 t_b = ' DESC limit ' + str(item[1])
             elif item[0] == 'bottom':
@@ -238,12 +238,13 @@ def process_command(user_input):
             else:
                 where_clause = ' WHERE ' +input_sql_conversion[item[0]]+'=? '
                 argument_list.append(item[1])
-        if where_clause == '' and addtl_where !='':
-            statement = start+join_sell+join_source+' WHERE '+addtl_where+sort+t_b
-        elif where_clause != '' and addtl_where !='':
-            statement = start+join_sell+join_source+where_clause+'AND '+addtl_where+sort+t_b
+        # if where_clause == '' and addtl_where !='':
+        #     statement = start+join_sell+join_source+' WHERE '+addtl_where+sort+t_b
+        # elif where_clause != '' and addtl_where !='':
+        #     statement = start+join_sell+join_source+where_clause+'AND '+addtl_where+sort+t_b
         else:
-            statement = start+join_sell+join_source+where_clause+addtl_where+sort+t_b
+            # statement = start+join_sell+join_source+where_clause+addtl_where+sort+t_b
+            statement = start+join_sell+join_source+where_clause+sort+t_b
         argument = tuple(argument_list)
         # print(statement)
         cur.execute(statement,argument)
@@ -550,5 +551,5 @@ if __name__=="__main__":
 
     update_bean_ids()
     print('Linking tables in db.')
-    
+
     interactive_prompt()
