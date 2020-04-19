@@ -1,3 +1,3 @@
-# F2018-507-Project3
+# Chocolate Database
 
-Please see the [Project Instructions](https://drive.google.com/open?id=1jaFXKu5uMd4EKiPWFFYRruei63rNKyze1wqLIZODNNo).
+This program creates a database to store information about gourmet chocolate bars. This data was originally retrieved from Kaggle (https://www.kaggle.com/rtatman/chocolate-bar-ratings/data) and https://restcountries.eu/. Both data files are included in the reposotory. ______ is the main file to run the program.
